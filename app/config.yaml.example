@@ -1,0 +1,107 @@
+memory:
+  enabled: true
+  db_path: "data/memory/nabu_memory.db"
+  vector_path: "data/memory/lancedb"
+  embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  extract_after_turns: true
+  max_context_memories: 5
+
+web_search:
+  api_key: "YOUR_TAVILY_API_KEY"
+  max_results: 3
+  search_depth: "basic"
+  timeout: 8.0
+
+data:
+  conversations_dir: "data/conversations"
+
+audio:
+  input_device_name: "pulse"
+  output_device_name: "USB Composite"
+  sample_rate: 16000
+  channels: 1
+  dtype: "float32"
+  vad:
+    use_silero: true
+    silero_threshold: 0.5
+    energy_threshold: 0.015
+    silence_duration: 1.5
+    max_duration: 15.0
+    pre_speech_buffer: 0.3
+
+stt:
+  model_size: "large-v3"
+  device: "cuda"
+  compute_type: "float16"
+  language: "de"
+  beam_size: 5
+  model_cache_dir: null
+
+tts:
+  hal:
+    enabled: true
+    url: "http://192.168.10.6:8091"
+    voice: "ref2"
+    language: "German"
+    timeout: 120.0
+  model_path: "/path/to/piper/model.onnx"
+  config_path: "/path/to/piper/model.onnx.json"
+  speaker_id: 0
+  length_scale: 1.0
+  output_sample_rate: 22050
+
+wake:
+  enabled: true
+  phrases:
+    - "ok nabu"
+    - "okay nabu"
+    - "ok nabo"
+    - "okay nabo"
+    - "o k nabu"
+  vad:
+    silence_duration: 0.8
+    max_duration: 3.0
+  acknowledgment:
+    beep_frequency: 800
+    beep_duration: 0.15
+  speakers:
+    joerg:
+      display_name: "Joerg"
+      aliases: ["joerg", "jorg"]
+    isa:
+      display_name: "Isa"
+      aliases: ["isa", "isabel"]
+
+homeassistant:
+  url: "http://YOUR_HA_IP:8123"
+  token: "YOUR_HA_LONG_LIVED_TOKEN"
+  timeout: 5.0
+  shortcuts:
+    - name: "Abendbeleuchtung"
+      entity_id: "switch.evening_lights"
+      domain: "switch"
+      patterns:
+        - "abendbeleuchtung.{0,10}ein"
+        - "abendbeleuchtung.{0,10}an"
+        - "abendbeleuchtung.{0,10}aus"
+      response_on: "Abendbeleuchtung ist eingeschaltet."
+      response_off: "Abendbeleuchtung ist ausgeschaltet."
+
+conversation:
+  idle_timeout: 30.0
+  max_duration: 300.0
+
+llm:
+  url: "http://YOUR_LLM_IP:8000/v1/chat/completions"
+  model: "your-model-name"
+  max_tokens: 1024
+  temperature: 0.7
+  timeout: 30.0
+  system_prompt: |
+    Du bist Nabu, ein hilfreicher Sprachassistent im Zuhause.
+    Du sprichst Deutsch, bist freundlich und antwortest kurz und
+    praezise, da deine Antworten vorgelesen werden.
+    Halte deine Antworten unter 3 Saetzen, es sei denn der Benutzer
+    bittet ausdruecklich um mehr Details.
+  max_history_turns: 6
+  max_context_tokens: 28000
